@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_management_app/ui/screen/add_new_task_screen.dart';
 
 import '../widgets/task_count_by_status_card.dart';
 
@@ -40,67 +41,76 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
             ),
             Expanded(
                 child: ListView.separated(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  tileColor: Colors.white,
-                  title: Text(
-                    "Title will be here",
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8,
-                    children: [
-                      Text("Description of Task"),
-                      Text(
-                        "Date 9/9/2025",
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                      tileColor: Colors.white,
+                      title: Text(
+                        "Title will be here",
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .titleMedium,
                       ),
-                      Row(
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 8,
                         children: [
-                          Chip(
-                            label: Text("New"),
-                            backgroundColor: Colors.blue,
-                            labelStyle: TextStyle(color: Colors.white),
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24)),
+                          Text("Description of Task"),
+                          Text(
+                            "Date 9/9/2025",
+                            style: TextStyle(fontWeight: FontWeight.w600),
                           ),
-                          Spacer(),
-                          IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.edit,
-                                color: Colors.redAccent,
-                              )),
-                          IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.delete,
-                                color: Colors.redAccent,
-                              )),
+                          Row(
+                            children: [
+                              Chip(
+                                label: Text("New"),
+                                backgroundColor: Colors.blue,
+                                labelStyle: TextStyle(color: Colors.white),
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24)),
+                              ),
+                              Spacer(),
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: Colors.redAccent,
+                                  )),
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.redAccent,
+                                  )),
+                            ],
+                          )
                         ],
-                      )
-                    ],
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(
-                  height: 5,
-                );
-              },
-            ))
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(
+                      height: 5,
+                    );
+                  },
+                ))
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: _onTapAddNewTaskButton,
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  void _onTapAddNewTaskButton() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => AddNewTaskScreen()));
   }
 }
 
