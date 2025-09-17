@@ -3,8 +3,10 @@ import 'package:task_management_app/ui/screen/update_profile_screen.dart';
 
 class THAppBar extends StatelessWidget implements PreferredSizeWidget {
   const THAppBar({
-    super.key,
+    super.key, this.fromUpdateProfile,
   });
+
+  final bool? fromUpdateProfile;
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +14,9 @@ class THAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.green,
       title: GestureDetector(
         onTap: () {
+          if (fromUpdateProfile ?? false) {
+            return;
+          }
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => UpdateProfileScreen()));
         },
@@ -24,29 +29,30 @@ class THAppBar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 Text(
                   "Nasir Uddin",
-                  style: Theme
-                      .of(context)
+                  style: Theme.of(context)
                       .textTheme
                       .titleSmall
                       ?.copyWith(color: Colors.white),
                 ),
                 Text(
                   "nasiruddin3954@gmail.com",
-                  style: Theme
-                      .of(context)
+                  style: Theme.of(context)
                       .textTheme
                       .bodySmall
                       ?.copyWith(color: Colors.white),
                 )
               ],
             ),
-
           ],
         ),
       ),
       actions: [
         IconButton(
-            onPressed: () {}, icon: Icon(Icons.logout, color: Colors.white,))
+            onPressed: () {},
+            icon: Icon(
+              Icons.logout,
+              color: Colors.white,
+            ))
       ],
     );
   }
