@@ -4,84 +4,87 @@ import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 
 class ApiCaller {
-  static final Logger _logger = Logger(); //Create a new instance of Logger.
+  static final Logger _logger = Logger(); // Only (singleton-like) logger instance which has been stored Class level
+  // If variable starts underscores, it is named private . Anyone can not access this
 
   static Future<ApiResponse> getRequest({required String url}) async {
-    // The result will give future and will be Responsed server .
-    // Function parameter is named which is required and This is async Function
-
+    // getRequest: It is required named parameter, async Function that returns Future<ApiResponse>
     try {
+      // exception handle for doing try block
       Uri uri = Uri.parse(
-          url); //Uri.parse() মেথড String কে নিয়ে সেটাকে Uri অবজেক্ট বানায়।
+          url); //String url converts to Uri object — http package get() expects Uri
 
-      _logRequest(url);
-
+      _logRequest(url); //logging: which url will request
       Response response = await get(
-          uri); // HTTP GET request পাঠাচ্ছে এবং response take পর্যন্ত অপেক্ষা করছে
-
-      _logResponse(url, response);
+          uri); // HTTP GET request sending and waiting  till response
+      _logResponse(url, response); // response is doing log (status code ও body)
 
       final int statusCode =
-          response.statusCode; // response থেকে HTTP status code নেওয়া
+          response.statusCode; //HTTP status code takes from response
 
       if (statusCode == 200) {
         // status 200 হলে সাধারণত সফল (success)
-        //Success
+        // SUCCESS
         final decodedData = jsonDecode(response
             .body); // response.body (JSON string) কে Dart object এ convert করা
         return ApiResponse(
-            isSuccess: true,
-            responseCode: statusCode,
-            responseData: decodedData);
+          isSuccess: true, // সফল
+          responseCode: statusCode, // 200
+          responseData: decodedData, // ডিকোড করা ডেটা
+        );
       } else {
-        //Failed
-        final decodedData = jsonDecode(response.body);
+        // 200 ছাড়া অন্য কোন status code — সাধারণত failed / error
+        // FAILED
+        final decodedData = jsonDecode(response
+            .body); // ভুল হলে ও server থেকে JSON আসতে পারে — এটাও decode করা হচ্ছে
         return ApiResponse(
-          isSuccess: false,
-          responseCode: statusCode,
-          responseData: decodedData,
+          isSuccess: false, // ব্যর্থ
+          responseCode: statusCode, // যেমন 400, 404, 500 ইত্যাদি
+          responseData:
+              decodedData, // error message / details যেটা সার্ভার পাঠিয়েছে
         );
       }
     } on Exception catch (e) {
+      // Exception ধরলে এখানে catch হবে (নেটওয়ার্ক সমস্যা, jsonDecode error ইত্যাদি)
       return ApiResponse(
-          isSuccess: false,
-          responseCode: -1,
-          responseData: null,
-          errorMessage: e.toString());
+        isSuccess: false,
+        responseCode: -1,
+        // কাস্টম কোড — নির্দেশ করে exception ঘটেছে (কোন HTTP code নেই)
+        responseData: null,
+        errorMessage: e.toString(), // exception message দিয়ে দেওয়া
+      );
     }
   }
 
-  static Future<ApiResponse> postRequest(
-      {required String url, Map<String, dynamic>? body}) async {
-    // The result will give future and will be Responsed server .
-    // Function parameter is named which is required and This is async Function
-
+  static Future<ApiResponse> postRequest({
+    required String url,
+    Map<String, dynamic>? body,
+  }) async {
+    // postRequest: POST করার জন্য, named required `url`, optional `body` (Map)
     try {
-      Uri uri = Uri.parse(
-          url); //Uri.parse() মেথড String কে নিয়ে সেটাকে Uri অবজেক্ট বানায়।
+      Uri uri = Uri.parse(url); // String URL -> Uri
 
-      _logRequest(url, body: body);
-
+      _logRequest(url, body: body); // request লগিং (এখানে body সহ)
       Response response = await post(
-          uri); // HTTP GET request পাঠাচ্ছে এবং response take পর্যন্ত অপেক্ষা করছে
+          uri); // **POST request পাঠানো হচ্ছে — কিন্তু এখানে body পাঠানো হচ্ছেনা** (এই লাইনে body/headers নেই)
+      _logResponse(url, response); // response লগ করা
 
-      _logResponse(url, response);
-
-      final int statusCode =
-          response.statusCode; // response থেকে HTTP status code নেওয়া
+      final int statusCode = response.statusCode; // HTTP status code
 
       if (statusCode == 200 || statusCode == 201) {
-        // status 200 হলে সাধারণত সফল (success) 201 new data created
-        //Success
-        final decodedData = jsonDecode(response
-            .body); // response.body (JSON string) কে Dart object এ convert করা
+        // 200 বা 201 (created) হলে সফল ধরা হচ্ছে
+        // SUCCESS
+        final decodedData =
+            jsonDecode(response.body); // response.body decode করা
         return ApiResponse(
-            isSuccess: true,
-            responseCode: statusCode,
-            responseData: decodedData);
+          isSuccess: true,
+          responseCode: statusCode,
+          responseData: decodedData,
+        );
       } else {
-        //Failed
-        final decodedData = jsonDecode(response.body);
+        // FAILED
+        final decodedData = jsonDecode(response
+            .body); // ব্যর্থতার ক্ষেত্রে ও সার্ভারের JSON decode করা হচ্ছে
         return ApiResponse(
           isSuccess: false,
           responseCode: statusCode,
@@ -90,23 +93,24 @@ class ApiCaller {
       }
     } on Exception catch (e) {
       return ApiResponse(
-          isSuccess: false,
-          responseCode: -1,
-          responseData: null,
-          errorMessage: e.toString());
+        isSuccess: false,
+        responseCode: -1,
+        responseData: null,
+        errorMessage: e.toString(),
+      );
     }
   }
 
   static void _logRequest(String url, {Map<String, dynamic>? body}) {
     _logger.i('URL => $url\n'
         'Request Body : $body');
-  }
+  } // _logger.i() Logger থেকে info-level log করে; এখানে URL ও body প্রদর্শন করা হচ্ছে
 
   static void _logResponse(String url, Response response) {
     _logger.i('URL => $url\n'
         'Status Code: ${response.statusCode}\n'
         'Body : ${response.body}');
-  }
+  } // response থেকে status code ও পুরো body লগ করা হচ্ছে (ডিবাগে খুব সহায়ক)
 }
 
 //Make Refer Class
@@ -115,14 +119,18 @@ class ApiCaller {
 // reassigned throughout the program's execution.
 //ApiResponse মূলত একটি ডাটা মডেল ক্লাস, যেটা API কল করার পর response কে সহজে ধরে রাখার জন্য ব্যবহার করা হয়।
 class ApiResponse {
-  final bool isSuccess;
-  final int responseCode;
-  final dynamic responseData;
-  final String? errorMessage;
+  // API response represent করার জন্য একটি simple model ক্লাস
+  final bool isSuccess; // সফল কি না
+  final int responseCode; // HTTP code বা কাস্টম -1
+  final dynamic
+      responseData; // সার্ভার থেকে আসা ডেটা (Map, List, String ইত্যাদি) — তাই dynamic
+  final String? errorMessage; // exception থাকলে error message (nullable)
 
-  ApiResponse(
-      {required this.isSuccess,
-      required this.responseCode,
-      required this.responseData,
-      this.errorMessage = "Something went wrong"});
+  ApiResponse({
+    required this.isSuccess,
+    required this.responseCode,
+    required this.responseData,
+    this.errorMessage =
+        'Something went wrong', // default value যদি caller কোনোটা না দেয়
+  });
 }
