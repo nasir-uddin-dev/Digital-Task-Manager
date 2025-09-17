@@ -7,26 +7,44 @@ class ApiCaller {
     // The result will give future and will be Responsed server .
     // Function parameter is named which is required and This is async Function
 
-    Uri uri = Uri.parse(
-        url); //Uri.parse() মেথড String কে নিয়ে সেটাকে Uri অবজেক্ট বানায়।
-    Response response = await get(
-        uri); // HTTP GET request পাঠাচ্ছে এবং response take পর্যন্ত অপেক্ষা করছে
+    try {
+      Uri uri = Uri.parse(
+          url); //Uri.parse() মেথড String কে নিয়ে সেটাকে Uri অবজেক্ট বানায়।
+      Response response = await get(
+          uri); // HTTP GET request পাঠাচ্ছে এবং response take পর্যন্ত অপেক্ষা করছে
 
-    //For showing debugging
-    print(url);
-    print(response.statusCode);
-    print(response.body);
-    final int statusCode =
-        response.statusCode; // response থেকে HTTP status code নেওয়া
+      //For showing debugging
+      print(url);
+      print(response.statusCode);
+      print(response.body);
+      final int statusCode =
+          response.statusCode; // response থেকে HTTP status code নেওয়া
 
-    if (response.statusCode == 200) {
-      // status 200 হলে সাধারণত সফল (success)
-      //Success
-      final decodedData = jsonDecode(response.body);  // response.body (JSON string) কে Dart object এ convert করা
+      if (response.statusCode == 200) {
+        // status 200 হলে সাধারণত সফল (success)
+        //Success
+        final decodedData = jsonDecode(response
+            .body); // response.body (JSON string) কে Dart object এ convert করা
+        return ApiResponse(
+            isSuccess: true,
+            responseCode: statusCode,
+            responseData: decodedData);
+      } else {
+        //Failed
+        final decodedData = jsonDecode(response.body);
+        return ApiResponse(
+            isSuccess: false,
+            responseCode: statusCode,
+            responseData: decodedData,
+
+        );
+      }
+    } on Exception catch (e) {
       return ApiResponse(
-          isSuccess: true, responseCode: statusCode, responseData: decodedData);
-    } else {
-      //Failed
+          isSuccess: false,
+          responseCode: -1,
+          responseData: null,
+          errorMessage: e.toString());
     }
   }
 }
@@ -46,5 +64,6 @@ class ApiResponse {
       {required this.isSuccess,
       required this.responseCode,
       required this.responseData,
-      this.errorMessage});
+      this.errorMessage = "Something went wrong"
+      });
 }
