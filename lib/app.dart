@@ -24,7 +24,8 @@ class TaskManagerApp extends StatelessWidget {
             ),
             errorBorder: OutlineInputBorder(
               borderSide: BorderSide.none,
-            )),
+            )
+        ),
         filledButtonTheme: FilledButtonThemeData(
           style: FilledButton.styleFrom(
               backgroundColor: Colors.green,

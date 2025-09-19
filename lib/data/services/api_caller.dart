@@ -4,7 +4,8 @@ import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 
 class ApiCaller {
-  static final Logger _logger = Logger(); // Only (singleton-like) logger instance which has been stored Class level
+  static final Logger _logger =
+      Logger(); // Only (singleton-like) logger instance which has been stored Class level
   // If variable starts underscores, it is named private . Anyone can not access this
 
   static Future<ApiResponse> getRequest({required String url}) async {
@@ -15,43 +16,43 @@ class ApiCaller {
           url); //String url converts to Uri object — http package get() expects Uri
 
       _logRequest(url); //logging: which url will request
-      Response response = await get(
-          uri); // HTTP GET request sending and waiting  till response
+      Response response =
+          await get(uri); // HTTP GET request sending and waiting  till response
       _logResponse(url, response); // response is doing log (status code ও body)
 
       final int statusCode =
           response.statusCode; //HTTP status code takes from response
 
       if (statusCode == 200) {
-        // status 200 হলে সাধারণত সফল (success)
+        // whether statusCode is 200, generally it tells success. It means OK
         // SUCCESS
         final decodedData = jsonDecode(response
             .body); // response.body (JSON string) কে Dart object এ convert করা
         return ApiResponse(
-          isSuccess: true, // সফল
+          isSuccess: true, // success
           responseCode: statusCode, // 200
-          responseData: decodedData, // ডিকোড করা ডেটা
+          responseData: decodedData, // Data Decode
         );
       } else {
-        // 200 ছাড়া অন্য কোন status code — সাধারণত failed / error
+        // any status code without 200, generally failed/error
         // FAILED
         final decodedData = jsonDecode(response
-            .body); // ভুল হলে ও server থেকে JSON আসতে পারে — এটাও decode করা হচ্ছে
+            .body); //If it mistakes, JSON can come from server, This is being decoded
         return ApiResponse(
-          isSuccess: false, // ব্যর্থ
-          responseCode: statusCode, // যেমন 400, 404, 500 ইত্যাদি
+          isSuccess: false, // Failed
+          responseCode: statusCode, // examples : 400, 404, 500 etc.
           responseData:
-              decodedData, // error message / details যেটা সার্ভার পাঠিয়েছে
+              decodedData, //error message/details that has been sent server
         );
       }
     } on Exception catch (e) {
-      // Exception ধরলে এখানে catch হবে (নেটওয়ার্ক সমস্যা, jsonDecode error ইত্যাদি)
+      // Exception caught, here is catch (Network issue, jsonDecode error etc)
       return ApiResponse(
         isSuccess: false,
         responseCode: -1,
-        // কাস্টম কোড — নির্দেশ করে exception ঘটেছে (কোন HTTP code নেই)
+        //Custom code - indicate happens exception(Nothing HTTP code)
         responseData: null,
-        errorMessage: e.toString(), // exception message দিয়ে দেওয়া
+        errorMessage: e.toString(), // exception message is given
       );
     }
   }
@@ -60,19 +61,22 @@ class ApiCaller {
     required String url,
     Map<String, dynamic>? body,
   }) async {
-    // postRequest: POST করার জন্য, named required `url`, optional `body` (Map)
+    // postRequest: for doing POST, named required `url`, optional `body` (Map)
     try {
       Uri uri = Uri.parse(url); // String URL -> Uri
 
       _logRequest(url, body: body); // request লগিং (এখানে body সহ)
       Response response = await post(
-          uri); // **POST request পাঠানো হচ্ছে — কিন্তু এখানে body পাঠানো হচ্ছেনা** (এই লাইনে body/headers নেই)
-      _logResponse(url, response); // response লগ করা
+        uri,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(body),
+      ); // **POST request is being sent — but here body is not being sent(This line has no body/headers)
+      _logResponse(url, response); // response is logged
 
       final int statusCode = response.statusCode; // HTTP status code
 
       if (statusCode == 200 || statusCode == 201) {
-        // 200 বা 201 (created) হলে সফল ধরা হচ্ছে
+        // 200 or 201 (created) are being succeed
         // SUCCESS
         final decodedData =
             jsonDecode(response.body); // response.body decode করা
@@ -83,8 +87,8 @@ class ApiCaller {
         );
       } else {
         // FAILED
-        final decodedData = jsonDecode(response
-            .body); // ব্যর্থতার ক্ষেত্রে ও সার্ভারের JSON decode করা হচ্ছে
+        final decodedData = jsonDecode(
+            response.body); //In case failing, server is doing decoded JSON
         return ApiResponse(
           isSuccess: false,
           responseCode: statusCode,
