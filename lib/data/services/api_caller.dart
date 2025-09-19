@@ -41,8 +41,7 @@ class ApiCaller {
         return ApiResponse(
           isSuccess: false, // Failed
           responseCode: statusCode, // examples : 400, 404, 500 etc.
-          responseData:
-              decodedData, //error message/details that has been sent server
+          responseData: decodedData['data'], //error message/details that has been sent server
         );
       }
     } on Exception catch (e) {
@@ -92,7 +91,7 @@ class ApiCaller {
         return ApiResponse(
           isSuccess: false,
           responseCode: statusCode,
-          responseData: decodedData,
+          responseData: decodedData['data'],
         );
       }
     } on Exception catch (e) {

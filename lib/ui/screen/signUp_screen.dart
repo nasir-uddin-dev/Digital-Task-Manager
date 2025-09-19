@@ -5,6 +5,8 @@ import 'package:task_management_app/data/utils/urls.dart';
 import 'package:task_management_app/ui/widgets/background_screen.dart';
 import 'package:task_management_app/ui/widgets/snack_bar_message.dart';
 
+import '../widgets/centered_progress_indicator.dart';
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -129,9 +131,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               Visibility(
                 visible: _signUpInProgress == false,
-                replacement: Center(
-                  child: CircularProgressIndicator(),
-                ),
+                replacement: CenteredProgressIndicator(),
                 child: FilledButton(
                     onPressed: () => _onTapSubmitButton(),
                     child: Icon(
@@ -216,3 +216,5 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 }
+
+
