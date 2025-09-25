@@ -69,7 +69,7 @@ class ApiCaller {
         uri,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
-      ); // **POST request is being sent — but here body is not being sent(This line has no body/headers)
+      ); // **POST request is being sent —
       _logResponse(url, response); // response is logged
 
       final int statusCode = response.statusCode; // HTTP status code

@@ -29,131 +29,140 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       body: BackgroundScreen(
           child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 50),
-        child: Form(
-          key: _formkey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 150,
-              ),
-              Text(
-                "Join With Us",
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: _emailController,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                  hintText: "Email",
-                ),
-                validator: (String? value) {
-                  String inputText = value ?? ' ';
-                  if (EmailValidator.validate(inputText) == false) {
-                    return 'Enter a valid email';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: _firstNameController,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                  hintText: "First Name",
-                ),
-                validator: (String? value) {
-                  if (value?.trim().isEmpty ?? true) {
-                    return 'Enter a first name';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: _lastNameController,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                  hintText: "Last Name",
-                ),
-                validator: (String? value) {
-                  if (value?.trim().isEmpty ?? true) {
-                    return 'Enter a last name';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: _mobileController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                  hintText: "Mobile",
-                ),
-                validator: (String? value) {
-                  if (value?.trim().isEmpty ?? true) {
-                    return 'Enter a mobile number';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: _passwordController,
-                keyboardType: TextInputType.number,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Password",
-                ),
-                validator: (String? value) {
-                  if ((value?.length ?? 0) <= 6) {
-                    return 'Enter a password more than 6 letters';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Visibility(
-                visible: _signUpInProgress == false,
-                replacement: CenteredProgressIndicator(),
-                child: FilledButton(
-                    onPressed: () => _onTapSubmitButton(),
-                    child: Icon(
-                      Icons.arrow_circle_right_outlined,
-                      size: 40,
-                    )),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            padding: EdgeInsets.symmetric(horizontal: 50),
+            child: Form(
+              key: _formkey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Have account ?'),
-                  TextButton(
-                      onPressed: _onTapSignInButton, child: Text("Sign In"))
+                  SizedBox(
+                    height: 150,
+                  ),
+                  Text(
+                    "Join With Us",
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .titleLarge,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: _emailController,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      hintText: "Email",
+                    ),
+                    validator: (String? value) {
+                      String inputText = value ?? ' ';
+                      if (EmailValidator.validate(inputText) == false) {
+                        return 'Enter a valid email';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: _firstNameController,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      hintText: "First Name",
+                    ),
+                    validator: (String? value) {
+                      if (value
+                          ?.trim()
+                          .isEmpty ?? true) {
+                        return 'Enter a first name';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: _lastNameController,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      hintText: "Last Name",
+                    ),
+                    validator: (String? value) {
+                      if (value
+                          ?.trim()
+                          .isEmpty ?? true) {
+                        return 'Enter a last name';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: _mobileController,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      hintText: "Mobile",
+                    ),
+                    validator: (String? value) {
+                      if (value
+                          ?.trim()
+                          .isEmpty ?? true) {
+                        return 'Enter a mobile number';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: _passwordController,
+                    keyboardType: TextInputType.number,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: "Password",
+                    ),
+                    validator: (String? value) {
+                      if ((value?.length ?? 0) <= 6) {
+                        return 'Enter a password more than 6 letters';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Visibility(
+                    visible: _signUpInProgress == false,
+                    replacement: CenteredProgressIndicator(),
+                    child: FilledButton(
+                        onPressed: () => _onTapSubmitButton(),
+                        child: Icon(
+                          Icons.arrow_circle_right_outlined,
+                          size: 40,
+                        )),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Have account ?'),
+                      TextButton(
+                          onPressed: _onTapSignInButton, child: Text("Sign In"))
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ),
-      )),
+              ),
+            ),
+          )),
     );
   }
 
@@ -175,37 +184,38 @@ class _SignupScreenState extends State<SignupScreen> {
     ///Make Api Data
     Map<String, dynamic> requestBody = {
       "email": _emailController.text.trim(),
-    "firstName": _firstNameController.text.trim(),
-    "lastName": _lastNameController.text.trim(),
-    "mobile": _mobileController.text.trim(),
-    "password": _passwordController.text,
-  };
-    
+      "firstName": _firstNameController.text.trim(),
+      "lastName": _lastNameController.text.trim(),
+      "mobile": _mobileController.text.trim(),
+      "password": _passwordController.text,
+    };
+
     ///Network calling
-   final ApiResponse response = await ApiCaller.postRequest(
-       url: Urls.registrationUrl,
-     body: requestBody
-   );
+    final ApiResponse response = await ApiCaller.postRequest(
+        url: Urls.registrationUrl,
+        body: requestBody
+    );
 
-   _signUpInProgress = false;
-   setState(() {
+    _signUpInProgress = false;
+    setState(() {
 
-   });
-   if(response.isSuccess){
-     _clearTextFields();
-     showSnackBarMessage( context,"Registration success! Please Login");
-   }else{
-     showSnackBarMessage(context, response.errorMessage!);
-   }
+    });
+    if (response.isSuccess) {
+      _clearTextFields();
+      showSnackBarMessage(context, "Registration success! Please Login");
+    } else {
+      showSnackBarMessage(context, response.errorMessage!);
+    }
   }
 
-  void _clearTextFields(){
+  void _clearTextFields() {
     _emailController.clear();
     _firstNameController.clear();
     _lastNameController.clear();
     _mobileController.clear();
     _passwordController.clear();
   }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -216,5 +226,37 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 }
+
+// SignupScreen
+// (
+// StatefulWidget)
+// └── Scaffold
+// └── BackgroundScreen
+// └── SingleChildScrollView (with padding: horizontal 50)
+// └── Form (key: _formkey)
+// └── Column (crossAxisAlignment: start)
+// ├── SizedBox(height: 150)
+// ├── Text("Join With Us")
+// ├── SizedBox(height: 10)
+// ├── TextFormField (Email)
+// ├── SizedBox(height: 10)
+// ├── TextFormField (First Name)
+// ├── SizedBox(height: 10)
+// ├── TextFormField (Last Name)
+// ├── SizedBox(height: 10)
+// ├── TextFormField (Mobile)
+// ├── SizedBox(height: 10)
+// ├── TextFormField (Password)
+// ├── SizedBox(height: 30)
+// ├── Visibility
+// │ ├── (if _signUpInProgress == false → FilledButton)
+// │ │ └── Icon(Icons.arrow_circle_right_outlined, size: 40)
+// │ └── (else → CenteredProgressIndicator)
+// ├── SizedBox(height: 30)
+// └── Row (mainAxisAlignment: center)
+// ├── Text("Have account ?")
+// └── TextButton("Sign In
+// "
+// )
 
 
