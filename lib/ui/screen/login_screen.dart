@@ -1,7 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:task_management_app/data/models/user_model.dart';
 import 'package:task_management_app/data/services/api_caller.dart';
 import 'package:task_management_app/data/utils/urls.dart';
+import 'package:task_management_app/ui/controllers/auth_controller.dart';
 import 'package:task_management_app/ui/screen/forget_password_verify_email_screen.dart';
 import 'package:task_management_app/ui/screen/main_nav_bar_holder_screen.dart';
 import 'package:task_management_app/ui/screen/signUp_screen.dart';
@@ -11,6 +13,8 @@ import 'package:task_management_app/ui/widgets/snack_bar_message.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  static const String name = '/login';
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -22,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _logInProgress = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +72,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.number,
                 obscureText: true,
                 decoration: InputDecoration(
+                  suffixIcon: Icon(
+                    Icons.remove_red_eye_rounded,
+                    color: Colors.black,
+                  ),
                   hintText: 'Password',
                 ),
                 validator: (String? value) {
@@ -119,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onTapSignUpButton() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SignupScreen()),
+      MaterialPageRoute(builder: (context) => SignUpScreen()),
     );
   }
 
@@ -132,35 +141,35 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onTapLoginScreen() {
     if (_formkey.currentState!.validate()) {
-    _login();
+      _login();
     }
-
-
   }
 
-  Future<void> _login() async{
+  Future<void> _login() async {
     _logInProgress = true;
-    setState(() {
-
-    });
+    setState(() {});
 
     Map<String, dynamic> requestBody = {
       "email": _emailController.text.trim(),
-      "password":_passwordController.text,
+      "password": _passwordController.text,
     };
 
-    final ApiResponse response = await ApiCaller.postRequest(url: Urls.loginUrl, body: requestBody);
+    final ApiResponse response =
+        await ApiCaller.postRequest(url: Urls.loginUrl, body: requestBody);
 
-    if(response.isSuccess && response.responseData['status'] == 'success'){
+    if (response.isSuccess && response.responseData['status'] == 'success') {
+
+      UserModel model = UserModel.fromJson(response.responseData['data']);
+      String accessToken = response.responseData['token'];
+       await AuthController.saveUserData(model, accessToken);
+
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => MainNavBarHolderScreen()),
           (predicate) => false);
-    }else{
+    } else {
       _logInProgress = false;
-      setState(() {
-
-      });
+      setState(() {});
       showSnackBarMessage(context, response.errorMessage!);
     }
   }
