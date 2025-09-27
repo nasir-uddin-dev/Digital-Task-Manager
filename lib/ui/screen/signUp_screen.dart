@@ -228,37 +228,76 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 }
+//
+// 1. ভ্যারিয়েবল ডিফাইন
+// _formKey → ফর্মের ভ্যালিডেশন কন্ট্রোল করতে ব্যবহার হয়।
+//
+// প্রতিটি TextEditingController → ইনপুট ফিল্ড কন্ট্রোল করার জন্য।
+//
+// _signUpInProgress → রেজিস্ট্রেশন চলার সময় Progress Indicator দেখাতে ব্যবহৃত হয়।
+//
+// 2. UI গঠন (build মেথড)
+//
+// BackgroundScreen → ব্যাকগ্রাউন্ড ডিজাইন।
+//
+// Form → ইনপুট ফিল্ডগুলো ভ্যালিডেশন সহকারে রাখা হয়েছে।
+//
+// Email Field → EmailValidator দিয়ে ইমেইল ভ্যালিড চেক করা হয়।
+//
+// First Name & Last Name Field → খালি থাকলে error দেখাবে।
+//
+// Mobile Field → খালি থাকলে error দেখাবে।
+//
+// Password Field → ৬ অক্ষরের বেশি হতে হবে।
+//
+// Sign Up Button → চাপলে _onTapSubmitButton() কল হয়।
+//
+// Sign In Button → চাপলে Navigator.pop() দিয়ে আগের LoginScreen এ ফিরে যাবে।
+//
+// 3. Helper Functions
+// _onTapSubmitButton()
+//
+// 👉 ফর্ম ভ্যালিড হলে _signUp() ফাংশন কল করে।
+//
+// _onTapSignInButton()
+//
+// 👉 লগইন স্ক্রিনে ফিরে যেতে Navigator.pop(context) ব্যবহার করছে।
 
-// SignupScreen
-// (
-// StatefulWidget)
-// └── Scaffold
-// └── BackgroundScreen
-// └── SingleChildScrollView (with padding: horizontal 50)
-// └── Form (key: _formkey)
-// └── Column (crossAxisAlignment: start)
-// ├── SizedBox(height: 150)
-// ├── Text("Join With Us")
-// ├── SizedBox(height: 10)
-// ├── TextFormField (Email)
-// ├── SizedBox(height: 10)
-// ├── TextFormField (First Name)
-// ├── SizedBox(height: 10)
-// ├── TextFormField (Last Name)
-// ├── SizedBox(height: 10)
-// ├── TextFormField (Mobile)
-// ├── SizedBox(height: 10)
-// ├── TextFormField (Password)
-// ├── SizedBox(height: 30)
-// ├── Visibility
-// │ ├── (if _signUpInProgress == false → FilledButton)
-// │ │ └── Icon(Icons.arrow_circle_right_outlined, size: 40)
-// │ └── (else → CenteredProgressIndicator)
-// ├── SizedBox(height: 30)
-// └── Row (mainAxisAlignment: center)
-// ├── Text("Have account ?")
-// └── TextButton("Sign In
-// "
-// )
+// 4. _signUp() ফাংশন
+// সাইনআপ শুরু হলে Progress Indicator দেখায়।
+// ইউজারের দেওয়া ইনপুটগুলো JSON ম্যাপ হিসেবে প্রস্তুত করা হয়।
+// ApiCaller.postRequest() এর মাধ্যমে রেজিস্ট্রেশন API তে POST রিকোয়েস্ট পাঠায়।
+// রেসপন্স পাওয়ার পর Progress Indicator বন্ধ করে।
+//
+// ✅ যদি সফল হয়:
+//
+// সব ইনপুট ফিল্ড খালি করা হয়।
+//
+// Snackbar এ "Registration success! Please Login" দেখায়।
+//
+// ❌ যদি ব্যর্থ হয়:
+//
+// Snackbar এ error message দেখায়।
+// 5. _clearTextFields()
+//
+// 👉 সব ইনপুট ফিল্ড ক্লিয়ার করে দেয়, যাতে নতুন করে ফিলাপ করা যায়।
+//
+// 6. dispose()
+//
+// 👉 সব TextEditingController মেমোরি থেকে রিমুভ করা হয় (Memory leak ঠেকাতে)।
+//
+// 🔑 সারসংক্ষেপ
+//
+// SignUpScreen → নতুন ইউজার রেজিস্ট্রেশন ফর্ম।
+//
+// ভ্যালিডেশন সহ Email, Name, Mobile, Password নেয়।
+//
+// _signUp() → API তে ডেটা পাঠায়।
+//
+// সফল হলে → ফিল্ড ক্লিয়ার + success মেসেজ।
+//
+// ব্যর্থ হলে → error message Snackbar এ দেখায়।
+//
+// Sign In Button → লগইন স্ক্রিনে ফিরে যাওয়ার জন্য।
 
 

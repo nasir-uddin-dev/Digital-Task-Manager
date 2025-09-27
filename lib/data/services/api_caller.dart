@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
+import 'package:task_management_app/ui/controllers/auth_controller.dart';
 
 class ApiCaller {
   static final Logger _logger =
@@ -16,8 +17,9 @@ class ApiCaller {
           url); //String url converts to Uri object — http package get() expects Uri
 
       _logRequest(url); //logging: which url will request
-      Response response =
-          await get(uri); // HTTP GET request sending and waiting  till response
+      Response response = await get(uri, headers: {
+        'token': AuthController.accessToken ?? ''
+      }); // HTTP GET request sending and waiting  till response
       _logResponse(url, response); // response is doing log (status code ও body)
 
       final int statusCode =
@@ -41,7 +43,8 @@ class ApiCaller {
         return ApiResponse(
           isSuccess: false, // Failed
           responseCode: statusCode, // examples : 400, 404, 500 etc.
-          responseData: decodedData['data'], //error message/details that has been sent server
+          responseData: decodedData[
+              'data'], //error message/details that has been sent server
         );
       }
     } on Exception catch (e) {
@@ -67,7 +70,10 @@ class ApiCaller {
       _logRequest(url, body: body); // request লগিং (এখানে body সহ)
       Response response = await post(
         uri,
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'token': AuthController.accessToken ?? ''
+        },
         body: jsonEncode(body),
       ); // **POST request is being sent —
       _logResponse(url, response); // response is logged

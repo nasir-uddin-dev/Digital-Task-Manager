@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:task_management_app/ui/controllers/auth_controller.dart';
+import 'package:task_management_app/ui/screen/login_screen.dart';
 import 'package:task_management_app/ui/screen/update_profile_screen.dart';
 
-class THAppBar extends StatelessWidget implements PreferredSizeWidget {
+class THAppBar extends StatefulWidget implements PreferredSizeWidget {
   const THAppBar({
-    super.key, this.fromUpdateProfile,
+    super.key,
+    this.fromUpdateProfile,
   });
 
   final bool? fromUpdateProfile;
 
+  @override
+  State<THAppBar> createState() => _THAppBarState();
+
+  @override
+  // TODO: implement preferredSize
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
+
+class _THAppBarState extends State<THAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.green,
       title: GestureDetector(
         onTap: () {
-          if (fromUpdateProfile ?? false) {
+          if (widget.fromUpdateProfile ?? false) {
             return;
           }
           Navigator.push(context,
@@ -28,14 +40,14 @@ class THAppBar extends StatelessWidget implements PreferredSizeWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Nasir Uddin",
+                  AuthController.userModel!.fullName,
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall
                       ?.copyWith(color: Colors.white),
                 ),
                 Text(
-                  "nasiruddin3954@gmail.com",
+                  AuthController.userModel!.email,
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall
@@ -48,7 +60,7 @@ class THAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-            onPressed: () {},
+            onPressed: _signOut,
             icon: Icon(
               Icons.logout,
               color: Colors.white,
@@ -57,7 +69,9 @@ class THAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  @override
-  // TODO: implement preferredSize
-  Size get preferredSize => Size.fromHeight(56);
+  Future<void> _signOut() async {
+    await AuthController.clearUserData();
+    Navigator.pushNamedAndRemoveUntil(
+        context, LoginScreen.name, (predicate) => false);
+  }
 }
