@@ -8,6 +8,7 @@ import 'package:task_management_app/ui/screen/update_profile_screen.dart';
 class TaskManagerApp extends StatelessWidget {
   const TaskManagerApp({super.key});
 
+  static GlobalKey<NavigatorState> navigator = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

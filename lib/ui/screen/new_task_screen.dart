@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:task_management_app/data/models/task_model.dart';
+import 'package:task_management_app/data/models/task_status_count_model.dart';
+import 'package:task_management_app/data/services/api_caller.dart';
+import 'package:task_management_app/data/utils/urls.dart';
 import 'package:task_management_app/ui/screen/add_new_task_screen.dart';
+import 'package:task_management_app/ui/widgets/centered_progress_indicator.dart';
+import 'package:task_management_app/ui/widgets/snack_bar_message.dart';
+import 'package:task_management_app/ui/widgets/task_card.dart';
 
 import '../widgets/task_count_by_status_card.dart';
 
@@ -11,6 +18,60 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
+  bool _getTaskStatusCountInProgress = false;
+  bool _getNewTaskInProgress = false;
+  List<TaskStatusCountModel> _taskStatusCountlist = [];
+  List<TaskModel> _newTaskList = [];
+
+  @override
+  void initState() {
+    _getAllTaskStatusCount();
+    _getAllNewTasks();
+    super.initState();
+  }
+
+  Future<void> _getAllTaskStatusCount() async {
+    _getTaskStatusCountInProgress = true;
+    setState(() {});
+
+    final ApiResponse response =
+        await ApiCaller.getRequest(url: Urls.taskStatusCountUrl);
+
+    if (response.isSuccess) {
+      List<TaskStatusCountModel> list = [];
+      for (Map<String, dynamic> jsonData in response.responseData['data']) {
+        list.add(TaskStatusCountModel.fromJson(jsonData));
+      }
+      _taskStatusCountlist = list;
+    } else {
+      showSnackBarMessage(context, response.errorMessage!);
+    }
+
+    _getTaskStatusCountInProgress = false;
+    setState(() {});
+  }
+
+  Future<void> _getAllNewTasks() async {
+    _getNewTaskInProgress = true;
+    setState(() {});
+
+    final ApiResponse response =
+        await ApiCaller.getRequest(url: Urls.newTaskListUrl);
+
+    _getNewTaskInProgress = false;
+    setState(() {});
+
+    if (response.isSuccess) {
+      List<TaskModel> list = [];
+      for (Map<String, dynamic> jsonData in response.responseData['data']) {
+        list.add(TaskModel.fromJson(jsonData));
+      }
+      _newTaskList = list;
+    } else {
+      showSnackBarMessage(context, response.errorMessage!);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,81 +84,46 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
             ),
             SizedBox(
               height: 90,
-              child: ListView.separated(
-                itemCount: 4,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return TaskCountByStatusCard(title: 'New', count: 2);
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    width: 4,
-                  );
-                },
+              child: Visibility(
+                visible: _getTaskStatusCountInProgress == false,
+                replacement: CenteredProgressIndicator(),
+                child: ListView.separated(
+                  itemCount: _taskStatusCountlist.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return TaskCountByStatusCard(
+                        title: _taskStatusCountlist[index].status,
+                        count: _taskStatusCountlist[index].count);
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(
+                      width: 4,
+                    );
+                  },
+                ),
               ),
             ),
             SizedBox(
               height: 8,
             ),
             Expanded(
-                child: ListView.separated(
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)),
-                      tileColor: Colors.white,
-                      title: Text(
-                        "Title will be here",
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .titleMedium,
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 8,
-                        children: [
-                          Text("Description of Task"),
-                          Text(
-                            "Date 9/9/2025",
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          Row(
-                            children: [
-                              Chip(
-                                label: Text("New"),
-                                backgroundColor: Colors.blue,
-                                labelStyle: TextStyle(color: Colors.white),
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(24)),
-                              ),
-                              Spacer(),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.edit,
-                                    color: Colors.redAccent,
-                                  )),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.redAccent,
-                                  )),
-                            ],
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(
-                      height: 5,
-                    );
-                  },
-                ))
+                child: Visibility(
+              visible: _getNewTaskInProgress == false,
+              replacement: CenteredProgressIndicator(),
+              child: ListView.separated(
+                itemCount: _newTaskList.length,
+                itemBuilder: (context, index) {
+                  return TaskCard(
+                    taskModel: _newTaskList[index],
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    height: 5,
+                  );
+                },
+              ),
+            ))
           ],
         ),
       ),
@@ -113,5 +139,3 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         context, MaterialPageRoute(builder: (context) => AddNewTaskScreen()));
   }
 }
-
-

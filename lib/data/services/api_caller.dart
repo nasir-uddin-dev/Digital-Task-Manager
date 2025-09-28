@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
+import 'package:task_management_app/app.dart';
 import 'package:task_management_app/ui/controllers/auth_controller.dart';
+import 'package:task_management_app/ui/screen/login_screen.dart';
 
 class ApiCaller {
   static final Logger _logger =
@@ -34,6 +37,14 @@ class ApiCaller {
           isSuccess: true, // success
           responseCode: statusCode, // 200
           responseData: decodedData, // Data Decode
+        );
+      } else if (statusCode == 401) {
+        await _moveToLogin();
+        return ApiResponse(
+          isSuccess: false, // Failed
+          responseCode: statusCode, // examples : 400, 404, 500 etc.
+          responseData: null, //error message/details that has been sent server
+          errorMessage: 'Un-autorized',
         );
       } else {
         // any status code without 200, generally failed/error
@@ -90,7 +101,16 @@ class ApiCaller {
           responseCode: statusCode,
           responseData: decodedData,
         );
-      } else {
+      } else if (statusCode == 401) {
+        await _moveToLogin();
+        return ApiResponse(
+          isSuccess: false, // Failed
+          responseCode: statusCode, // examples : 400, 404, 500 etc.
+          responseData: null, //error message/details that has been sent server
+          errorMessage: 'Un-authorized',
+        );
+      }
+      else {
         // FAILED
         final decodedData = jsonDecode(
             response.body); //In case failing, server is doing decoded JSON
@@ -120,13 +140,20 @@ class ApiCaller {
         'Status Code: ${response.statusCode}\n'
         'Body : ${response.body}');
   } // response থেকে status code ও পুরো body লগ করা হচ্ছে (ডিবাগে খুব সহায়ক)
+
+  static Future<void> _moveToLogin() async {
+    await AuthController.clearUserData();
+    Navigator.pushNamedAndRemoveUntil(TaskManagerApp.navigator.currentContext!,
+        LoginScreen.name, (predicate) => false);
+  }
 }
 
 //Make Refer Class
 //The final keyword in Dart is used to declare a variable that can only be assigned
 // once. Once a final variable has been initialized, its value cannot be changed or
 // reassigned throughout the program's execution.
-//ApiResponse মূলত একটি ডাটা মডেল ক্লাস, যেটা API কল করার পর response কে সহজে ধরে রাখার জন্য ব্যবহার করা হয়।
+//ApiResponse মূলত একটি ডাটা মডেল ক্লাস, যেটা API কল করার পর response কে সহজে ধরে রাখার জন্য
+// ব্যবহার করা হয়।
 class ApiResponse {
   // API response represent করার জন্য একটি simple model ক্লাস
   final bool isSuccess; // সফল কি না
