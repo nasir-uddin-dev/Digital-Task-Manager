@@ -16,6 +16,7 @@ class UserModel {
       required this.lastName,
       required this.mobile});
 
+  ///JSON -> OBJECT
   factory UserModel.fromJson(Map<String, dynamic> jsonData) {
     return UserModel(
         id: jsonData['_id'],
@@ -25,6 +26,7 @@ class UserModel {
         mobile: jsonData['mobile']);
   }
 
+  ///OBJECT -> JSON
   Map<String, dynamic> toJson() {
     return {
       '_id': id,

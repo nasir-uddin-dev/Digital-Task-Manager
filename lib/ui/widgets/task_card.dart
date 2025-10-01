@@ -7,6 +7,7 @@ class TaskCard extends StatelessWidget {
   });
 
   final TaskModel taskModel;
+
   @override
   Widget build(BuildContext context) {
     return ListTile(

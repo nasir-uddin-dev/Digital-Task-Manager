@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:task_management_app/ui/screen/pin_verification_screen.dart';
 import 'package:task_management_app/ui/widgets/background_screen.dart';
@@ -51,6 +52,13 @@ class _ForgetPasswordVerifyEmailScreenState
                     decoration: InputDecoration(
                       hintText: 'Email',
                     ),
+                    validator: (String? value){
+                      String inputText = value ?? " ";
+                      if(EmailValidator.validate(inputText) == false){
+                        return 'Enter a valid email';
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(
                     height: 30,

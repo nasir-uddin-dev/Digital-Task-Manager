@@ -9,7 +9,7 @@ import 'package:task_management_app/ui/screen/login_screen.dart';
 
 class ApiCaller {
   static final Logger _logger =
-      Logger(); // Only (singleton-like) logger instance which has been stored Class level
+  Logger(); // Only (singleton-like) logger instance which has been stored Class level
   // If variable starts underscores, it is named private . Anyone can not access this
 
   static Future<ApiResponse> getRequest({required String url}) async {
@@ -55,7 +55,7 @@ class ApiCaller {
           isSuccess: false, // Failed
           responseCode: statusCode, // examples : 400, 404, 500 etc.
           responseData: decodedData[
-              'data'], //error message/details that has been sent server
+          'data'], //error message/details that has been sent server
         );
       }
     } on Exception catch (e) {
@@ -95,7 +95,7 @@ class ApiCaller {
         // 200 or 201 (created) are being succeed
         // SUCCESS
         final decodedData =
-            jsonDecode(response.body); // response.body decode করা
+        jsonDecode(response.body); // response.body decode করা
         return ApiResponse(
           isSuccess: true,
           responseCode: statusCode,
@@ -109,8 +109,7 @@ class ApiCaller {
           responseData: null, //error message/details that has been sent server
           errorMessage: 'Un-authorized',
         );
-      }
-      else {
+      } else {
         // FAILED
         final decodedData = jsonDecode(
             response.body); //In case failing, server is doing decoded JSON
@@ -159,7 +158,7 @@ class ApiResponse {
   final bool isSuccess; // সফল কি না
   final int responseCode; // HTTP code বা কাস্টম -1
   final dynamic
-      responseData; // সার্ভার থেকে আসা ডেটা (Map, List, String ইত্যাদি) — তাই dynamic
+  responseData; // সার্ভার থেকে আসা ডেটা (Map, List, String ইত্যাদি) — তাই dynamic
   final String? errorMessage; // exception থাকলে error message (nullable)
 
   ApiResponse({
@@ -167,6 +166,8 @@ class ApiResponse {
     required this.responseCode,
     required this.responseData,
     this.errorMessage =
-        'Something went wrong', // default value যদি caller কোনোটা না দেয়
+    'Something went wrong', // default value যদি caller কোনোটা না দেয়
   });
 }
+
+
