@@ -6,7 +6,7 @@ import 'package:task_management_app/data/utils/urls.dart';
 import 'package:task_management_app/ui/controllers/auth_controller.dart';
 import 'package:task_management_app/ui/screen/forget_password_verify_email_screen.dart';
 import 'package:task_management_app/ui/screen/main_nav_bar_holder_screen.dart';
-import 'package:task_management_app/ui/screen/signUp_screen.dart';
+import 'package:task_management_app/ui/screen/signup_screen.dart';
 import 'package:task_management_app/ui/widgets/background_screen.dart';
 import 'package:task_management_app/ui/widgets/centered_progress_indicator.dart';
 import 'package:task_management_app/ui/widgets/snack_bar_message.dart';

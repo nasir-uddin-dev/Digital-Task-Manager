@@ -5,9 +5,7 @@ class UserModel {
   final String lastName;
   final String mobile;
 
-  String get fullName{
-    return '$firstName $lastName';
-  }
+  String get fullName => '$firstName $lastName';
 
   UserModel(
       {required this.id,
@@ -17,23 +15,20 @@ class UserModel {
       required this.mobile});
 
   ///JSON -> OBJECT
-  factory UserModel.fromJson(Map<String, dynamic> jsonData) {
-    return UserModel(
-        id: jsonData['_id'],
-        email: jsonData['email'],
-        firstName: jsonData['firstName'],
-        lastName: jsonData['lastName'],
-        mobile: jsonData['mobile']);
-  }
+  factory UserModel.fromJson(Map<String, dynamic> jsonData) => UserModel(
+      id: jsonData['_id'],
+      email: jsonData['email'],
+      firstName: jsonData['firstName'],
+      lastName: jsonData['lastName'],
+      mobile: jsonData['mobile']);
 
   ///OBJECT -> JSON
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       '_id': id,
       'email': email,
       'firstName': firstName,
       'lastName': lastName,
       'mobile': mobile,
     };
-  }
+
 }

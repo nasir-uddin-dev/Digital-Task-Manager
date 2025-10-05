@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_management_app/ui/screen/login_screen.dart';
 import 'package:task_management_app/ui/screen/main_nav_bar_holder_screen.dart';
-import 'package:task_management_app/ui/screen/signUp_screen.dart';
+import 'package:task_management_app/ui/screen/signup_screen.dart';
 import 'package:task_management_app/ui/screen/splash_screen.dart';
 import 'package:task_management_app/ui/screen/update_profile_screen.dart';
 

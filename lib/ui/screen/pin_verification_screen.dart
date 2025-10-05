@@ -11,7 +11,7 @@ class PinVerificationScreen extends StatefulWidget {
 }
 
 class _PinVerificationScreenState extends State<PinVerificationScreen> {
-  GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final TextEditingController _pinVerificationController =
       TextEditingController();
 

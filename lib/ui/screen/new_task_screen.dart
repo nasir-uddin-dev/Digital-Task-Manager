@@ -58,8 +58,6 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     final ApiResponse response =
         await ApiCaller.getRequest(url: Urls.newTaskListUrl);
 
-    _getNewTaskInProgress = false;
-    setState(() {});
 
     if (response.isSuccess) {
       List<TaskModel> list = [];
@@ -70,6 +68,9 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     } else {
       showSnackBarMessage(context, response.errorMessage!);
     }
+
+    _getNewTaskInProgress = false;
+    setState(() {});
   }
 
   @override
