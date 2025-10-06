@@ -25,8 +25,11 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
   @override
   void initState() {
-    _getAllTaskStatusCount();
-    _getAllNewTasks();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getAllTaskStatusCount();
+      _getAllNewTasks();
+    });
+
     super.initState();
   }
 
@@ -115,7 +118,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                 itemCount: _newTaskList.length,
                 itemBuilder: (context, index) {
                   return TaskCard(
-                    taskModel: _newTaskList[index],
+                    taskModel: _newTaskList[index], refreshParent: () { _getAllNewTasks();},
                   );
                 },
                 separatorBuilder: (BuildContext context, int index) {

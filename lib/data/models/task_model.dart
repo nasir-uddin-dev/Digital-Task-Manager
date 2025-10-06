@@ -30,7 +30,7 @@ class TaskModel {
         description: jsonData['description'],
         status: jsonData['status'],
         email: jsonData['email'],
-        createdDate: jsonData['createdData'],
+        createdDate: jsonData['createdData'] ?? '',
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:task_management_app/data/models/user_model.dart';
+import 'package:task_management_app/ui/controllers/auth_controller.dart';
 import 'package:task_management_app/ui/widgets/background_screen.dart';
 import 'package:task_management_app/ui/widgets/tm_app_bar.dart';
 
@@ -26,6 +28,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final ImagePicker _imagePicker = ImagePicker(); //create instance
   XFile? _selectedImage;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    UserModel user = AuthController.userModel!;
+    _emailTEController.text = user.email;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
