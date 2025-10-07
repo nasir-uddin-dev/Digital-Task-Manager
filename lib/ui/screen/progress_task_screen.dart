@@ -21,6 +21,7 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getAllProgressTasks();
+
     });
     super.initState();
   }
@@ -31,6 +32,9 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
 
     final ApiResponse response =
         await ApiCaller.getRequest(url: Urls.progressTaskListUrl);
+
+    _getProgressTaskInProgress = false;
+    setState(() {});
 
     if (response.isSuccess) {
       List<TaskModel> list = [];
@@ -51,25 +55,24 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Visibility(
-        visible: _getProgressTaskInProgress,
-        replacement: CenteredProgressIndicator(),
-        child: ListView.separated(
-          itemCount: _progressTaskList.length,
-          itemBuilder: (context, index) {
-            return TaskCard(
-                taskModel: _progressTaskList[index],
-                refreshParent: (){
-                  _getAllProgressTasks();
-                });
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              height: 5,
-            );
-          },
-        ),
-      ),
+      child:   Expanded(
+          child: Visibility(
+            visible: _getProgressTaskInProgress == false,
+            replacement: CenteredProgressIndicator(),
+            child: ListView.separated(
+              itemCount: _progressTaskList.length,
+              itemBuilder: (context, index) {
+                return TaskCard(
+                  taskModel: _progressTaskList[index], refreshParent: () { _getAllProgressTasks();},
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  height: 5,
+                );
+              },
+            ),
+          ))
     ));
   }
 }

@@ -44,7 +44,7 @@ class ApiCaller {
           isSuccess: false, // Failed
           responseCode: statusCode, // examples : 400, 404, 500 etc.
           responseData: null, //error message/details that has been sent server
-          errorMessage: 'Un-autorized',
+          errorMessage: 'Un-authorized',
         );
       } else {
         // any status code without 200, generally failed/error
