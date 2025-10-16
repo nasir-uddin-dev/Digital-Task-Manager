@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:task_management_app/ui/widgets/centered_progress_indicator.dart';
+import 'package:task_management_app/ui/widgets/task_card.dart';
 
-
-
+import '../../data/models/task_model.dart';
+import '../../data/services/api_caller.dart';
+import '../../data/utils/urls.dart';
+import '../widgets/snack_bar_message.dart';
 
 class CompleteTaskScreen extends StatefulWidget {
   const CompleteTaskScreen({super.key});
@@ -11,66 +15,62 @@ class CompleteTaskScreen extends StatefulWidget {
 }
 
 class _CompleteTaskScreenState extends State<CompleteTaskScreen> {
+  bool _getCompletedTaskInProgress = false;
+  List<TaskModel> _completedTaskList = [];
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getAllCompletedTasks();
+    });
+    super.initState();
+  }
+
+  Future<void> _getAllCompletedTasks() async {
+    _getCompletedTaskInProgress = true;
+    setState(() {});
+
+    final ApiResponse response = await ApiCaller.getRequest(url: Urls.completedTaskListUrl);
+
+    _getCompletedTaskInProgress = false;
+    setState(() {});
+
+    if (response.isSuccess) {
+      List<TaskModel> list = [];
+      for (Map<String, dynamic> jsonData in response.responseData['data']) {
+        list.add(TaskModel.fromJson(jsonData));
+      }
+      _completedTaskList = list;
+    } else {
+      showSnackBarMessage(context, response.errorMessage!);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Expanded(
-              child: ListView.separated(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                    tileColor: Colors.white,
-                    title: Text(
-                      "Title will be here",
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 8,
-                      children: [
-                        Text("Description of Task"),
-                        Text(
-                          "Date 9/9/2025",
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                        Row(
-                          children: [
-                            Chip(
-                              label: Text("Complete"),
-                              backgroundColor: Colors.green,
-                              labelStyle: TextStyle(color: Colors.white),
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24)),
-                            ),
-                            Spacer(),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.edit,
-                                  color: Colors.redAccent,
-                                )),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.redAccent,
-                                )),
-                          ],
-                        )
-                      ],
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: 5,
-                  );
-                },
-              )),
-        ));
+      padding: const EdgeInsets.all(8.0),
+      child: Expanded(
+          child: Visibility(
+        visible: _getCompletedTaskInProgress == false,
+        replacement: CenteredProgressIndicator(),
+        child: ListView.separated(
+          itemCount: _completedTaskList.length,
+          itemBuilder: (context, int index) {
+            return TaskCard(
+                taskModel: _completedTaskList[index],
+                refreshParent: () {
+                  _getAllCompletedTasks();
+                });
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return SizedBox(
+              height: 5,
+            );
+          },
+        ),
+      )),
+    ));
   }
 }

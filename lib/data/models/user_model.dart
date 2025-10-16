@@ -4,6 +4,7 @@ class UserModel {
   final String firstName;
   final String lastName;
   final String mobile;
+  final String photo;
 
   String get fullName => '$firstName $lastName';
 
@@ -12,23 +13,26 @@ class UserModel {
       required this.email,
       required this.firstName,
       required this.lastName,
-      required this.mobile});
+      required this.mobile,
+      required this.photo});
 
   ///JSON -> OBJECT
   factory UserModel.fromJson(Map<String, dynamic> jsonData) => UserModel(
-      id: jsonData['_id'],
-      email: jsonData['email'],
-      firstName: jsonData['firstName'],
-      lastName: jsonData['lastName'],
-      mobile: jsonData['mobile']);
+        id: jsonData['_id'],
+        email: jsonData['email'],
+        firstName: jsonData['firstName'],
+        lastName: jsonData['lastName'],
+        mobile: jsonData['mobile'],
+        photo: jsonData['photo'] ?? ' ',
+      );
 
   ///OBJECT -> JSON
   Map<String, dynamic> toJson() => {
-      '_id': id,
-      'email': email,
-      'firstName': firstName,
-      'lastName': lastName,
-      'mobile': mobile,
-    };
-
+        '_id': id,
+        'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'mobile': mobile,
+        'photo' : photo
+      };
 }

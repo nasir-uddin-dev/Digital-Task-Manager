@@ -149,7 +149,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         hintText: 'Password (optional)',
                         hintStyle: TextStyle(color: Colors.grey)),
                     validator: (String? value) {
-                      if (value != null && value.length < 6) {
+                      if (value != null &&
+                          value.isNotEmpty &&
+                          value.length < 6) {
                         return "Enter a password more than 6 letters";
                       }
                       return null;
@@ -192,17 +194,18 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       "firstName": _firstNameTEController.text.trim(),
       "lastName": _lastNameTEController.text.trim(),
       "mobile": _mobileTEController.text.trim(),
-      "password": "123456",
-      "photo": " ",
     };
 
     if (_passwordTEController.text.isNotEmpty) {
       requestBody['password'] = _passwordTEController.text;
     }
 
+    String? encodedPhoto;
+
     if (_selectedImage != null) {
-      Uint8List bytes = await _selectedImage!.readAsBytes();
-      requestBody['photo'] = jsonEncode(bytes);
+      List<int> bytes = await _selectedImage!.readAsBytes();
+      encodedPhoto = jsonEncode(bytes);
+      requestBody['photo'] = encodedPhoto;
     }
 
     final ApiResponse response = await ApiCaller.postRequest(
@@ -212,11 +215,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     setState(() {});
 
     if (response.isSuccess) {
-      UserModel model = UserModel.fromJson(response.responseData['data']);
-      String accessToken = response.responseData['token'];
-      await AuthController.saveUserData(model, accessToken);
-
       _passwordTEController.clear();
+      UserModel model = UserModel(
+          id: AuthController.userModel!.id,
+          email: _emailTEController.text,
+          firstName: _firstNameTEController.text.trim(),
+          lastName: _lastNameTEController.text.trim(),
+          mobile: _mobileTEController.text.trim(),
+          photo: encodedPhoto ?? AuthController.userModel!.photo);
+      await AuthController.updateUserData(model);
       showSnackBarMessage(context, "Profile has been updated");
     } else {
       showSnackBarMessage(context, response.errorMessage!);
