@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:task_management_app/data/models/task_model.dart';
+import 'package:provider/provider.dart';
+
 import 'package:task_management_app/data/models/task_status_count_model.dart';
 import 'package:task_management_app/data/services/api_caller.dart';
 import 'package:task_management_app/data/utils/urls.dart';
+import 'package:task_management_app/ui/controllers/new_task_list_provider.dart';
 import 'package:task_management_app/ui/screen/add_new_task_screen.dart';
 import 'package:task_management_app/ui/widgets/centered_progress_indicator.dart';
 import 'package:task_management_app/ui/widgets/snack_bar_message.dart';
@@ -19,15 +21,15 @@ class NewTaskScreen extends StatefulWidget {
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
   bool _getTaskStatusCountInProgress = false;
-  bool _getNewTaskInProgress = false;
+
   List<TaskStatusCountModel> _taskStatusCountlist = [];
-  List<TaskModel> _newTaskList = [];
+
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getAllTaskStatusCount();
-      _getAllNewTasks();
+    context.read<NewTaskListProvider>().getNewTasks();
     });
 
     super.initState();
@@ -54,27 +56,6 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     setState(() {});
   }
 
-  Future<void> _getAllNewTasks() async {
-    _getNewTaskInProgress = true;
-    setState(() {});
-
-    final ApiResponse response =
-        await ApiCaller.getRequest(url: Urls.newTaskListUrl);
-
-
-    if (response.isSuccess) {
-      List<TaskModel> list = [];
-      for (Map<String, dynamic> jsonData in response.responseData['data']) {
-        list.add(TaskModel.fromJson(jsonData));
-      }
-      _newTaskList = list;
-    } else {
-      showSnackBarMessage(context, response.errorMessage!);
-    }
-
-    _getNewTaskInProgress = false;
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,23 +92,27 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
               height: 8,
             ),
             Expanded(
-                child: Visibility(
-              visible: _getNewTaskInProgress == false,
-              replacement: CenteredProgressIndicator(),
-              child: ListView.separated(
-                itemCount: _newTaskList.length,
-                itemBuilder: (context, index) {
-                  return TaskCard(
-                    taskModel: _newTaskList[index], refreshParent: () { _getAllNewTasks();},
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: 5,
-                  );
-                },
-              ),
-            ))
+                child: Consumer<NewTaskListProvider>(
+                  builder: (context, newTaskListProvider, _) {
+                    return Visibility(
+                                  visible: newTaskListProvider.getNewTaskInProgress == false,
+                                  replacement: CenteredProgressIndicator(),
+                                  child: ListView.separated(
+                    itemCount: newTaskListProvider.newTaskList.length,
+                    itemBuilder: (context, index) {
+                      return TaskCard(
+                        taskModel: newTaskListProvider.newTaskList[index], refreshParent: () { context.read<NewTaskListProvider>().getNewTasks();},
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(
+                        height: 5,
+                      );
+                    },
+                                  ),
+                                );
+                  }
+                ))
           ],
         ),
       ),

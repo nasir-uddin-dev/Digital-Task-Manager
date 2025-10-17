@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:task_management_app/data/services/api_caller.dart';
-import 'package:task_management_app/data/utils/urls.dart';
 import 'package:task_management_app/ui/screen/login_screen.dart';
 import 'package:task_management_app/ui/widgets/background_screen.dart';
 
@@ -16,7 +14,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
 
-  bool _resetPasswordInProgress = false;
+  final bool _resetPasswordInProgress = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
