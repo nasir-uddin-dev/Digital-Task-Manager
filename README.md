@@ -1,21 +1,13 @@
-# task_management_app
+<img width="4343" height="2274" alt="Artboard – 1" src="https://github.com/user-attachments/assets/eeeb0c30-6470-4248-b9fb-f3cbe3319af0" />
 
-Task management in project management refers to the process of planning, organizing,
-and executing tasks within a project to achieve specific goals and objectives. It involves 
-identifying tasks, assigning responsibilities, setting deadlines, and monitoring progress to
-ensure that projects are completed on time and within budget. Effective task management is 
-crucial for project success as it helps teams stay organized, prioritize work, and achieve 
-desired outcomes efficiently.  Table of Content
 
-## Getting Started
+# Digital Task Manager App
 
-This project is a starting point for a Flutter application.
+# Overview
+The Task Manager App is a Flutter mobile application designed to help users manage their tasks efficiently. The app utilizes API to sent data third-party server and fetching the data to show application. Besides, To store local data uses shared_prefereence. The state management of provider is used to the performance of app. In order to, users can choose picture gallery. 
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Features
+- Add New Task: Easily add new tasks with titles, descriptions, start and end dates.
+- Edit and Delete Tasks: Each tasks created can be edited and deleted.
+- Sort and Search: Sort tasks by date or completion status, and search for specific tasks using keywords.
+- Error Handling: The app includes error handling mechanisms to gracefully handle and display errors to users.
